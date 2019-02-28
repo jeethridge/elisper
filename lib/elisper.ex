@@ -1,18 +1,8 @@
 defmodule Elisper do
   @moduledoc """
-  Documentation for Elisper.
+  API for the Elisper interpreter.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Elisper.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  alias Elisper.MCI
+  defdelegate eval(exp, env), to: MCI
+  defdelegate apply(procedure, arguments), to: MCI
 end
