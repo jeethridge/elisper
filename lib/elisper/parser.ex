@@ -21,6 +21,7 @@ defmodule Elisper.Parser do
   @doc """
   Read an expression from a sequence of tokens.
   """
+  def read_from_tokens([]), do: raise TokenMissingError
   def read_from_tokens(list), do: nil
 
   @doc """

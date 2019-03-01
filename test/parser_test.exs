@@ -10,5 +10,9 @@ defmodule ParserTest do
     assert actual == expected
   end
 
+  test "read_from_tokens raises TokenMissingError for zero length list" do
+    tokens = []
+    assert_raise TokenMissingError, fn -> Parser.read_from_tokens(tokens) end
+  end
 
 end
