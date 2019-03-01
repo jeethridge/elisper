@@ -15,4 +15,11 @@ defmodule ParserTest do
     assert_raise TokenMissingError, fn -> Parser.read_from_tokens(tokens) end
   end
 
+  test "read_from_tokens raises SyntaxError for leading )" do
+    tokens = [")"]
+    assert_raise RuntimeError,
+                 "Expression must not start with (",
+                 fn -> Parser.read_from_tokens(tokens) end
+  end
+
 end

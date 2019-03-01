@@ -22,6 +22,10 @@ defmodule Elisper.Parser do
   Read an expression from a sequence of tokens.
   """
   def read_from_tokens([]), do: raise TokenMissingError
+  def read_from_tokens([")"]) do
+    # TODO: What can't we use SyntaxError?
+    raise RuntimeError, message: "Expression must not start with ("
+  end
   def read_from_tokens(list), do: nil
 
   @doc """
