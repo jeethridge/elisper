@@ -2,6 +2,7 @@ defmodule Elisper.EvalActions do
   @moduledoc """
   A nice home for functions that define actions which can be taken by eval.
   """
+  def list_of_values(exp, env), do: nil
   def lookup_variable_value(exp, env), do: nil
   def text_of_quoutation(exp, env), do: nil
   def eval_assignment(exp, env), do: nil
