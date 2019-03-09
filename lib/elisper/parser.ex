@@ -1,4 +1,5 @@
 defmodule Elisper.Parser do
+  alias Elisper.CST
   @moduledoc """
   Defines the parsing operations required for the interpreter to work.
   """
@@ -17,20 +18,4 @@ defmodule Elisper.Parser do
     |> String.replace(")", " ) ")
     |> String.split()
   end
-
-  @doc """
-  Read an expression from a sequence of tokens.
-  """
-  def read_from_tokens([]), do: raise TokenMissingError
-  def read_from_tokens([")"]) do
-    # TODO: What can't we use SyntaxError?
-    raise RuntimeError, message: "Expression must not start with ("
-  end
-  def read_from_tokens(list), do: nil
-
-  @doc """
-  Numbers are numbers, all other tokens are symbols
-  """
-  def atom(str), do: nil
-
 end
