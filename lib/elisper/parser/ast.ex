@@ -1,9 +1,9 @@
 defmodule Elisper.Parser.AST do
 @moduledoc """
-This is a bit of a hacky solution for now because writing proper parsers is hard.
+This module is responsible for building the abstract syntax tree from a token stream.
 """
-
-def build(tokens)
-
+  def build(_) do
+    []
+  end
 
 end
