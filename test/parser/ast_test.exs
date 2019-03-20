@@ -4,17 +4,25 @@ defmodule AstTest do
   alias Elisper.Parser.AST
 
   @tag :ignore
-  test "tokens for simple expression gives valid CST" do
-    tokens = ["(", "+", "1", "1", ")"]
-    expected = ["+", "1", "1"]
+  test "tokens for simple expression gives valid AST" do
+    tokens = [":+", 1, 1]
+    expected = [":+", 1, 1]
     actual = AST.build(tokens)
     assert actual == expected
   end
 
   @tag :ignore
-  test "tokens for nested expression gives nested CST" do
-    tokens = ["(", "*", "x", "(", "+", "y", "1", ")", ")"]
-    expected = ["*", "x", ["+", "y", "1"]]
+  test "tokens for simple list expression gives valid AST" do
+    tokens = ["(", ":+", 1, 1, ")"]
+    expected = [":+", 1, 1]
+    actual = AST.build(tokens)
+    assert actual == expected
+  end
+
+  @tag :ignore
+  test "tokens for nested expression gives valid AST" do
+    tokens = ["(", "*", "3", "(", "+", "2", "1", ")", ")"]
+    expected = [":*", 3, [":+", 2, 1]]
     actual = AST.build(tokens)
     assert actual == expected
   end

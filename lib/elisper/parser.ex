@@ -1,12 +1,12 @@
 defmodule Elisper.Parser do
   @moduledoc """
-  Defines the parsing operations required for the interpreter to work.
+  Defines the parsing operations for the interpreter
   """
-  alias Elisper.Parser.Naive, as: NaiveParser
+  alias Elisper.Parser.Parser, as: ParserImpl
 
   @doc """
-  Read a schem expression from a string.
+  Parse a scheme expression.
   """
-  defdelegate parse(program), to: NaiveParser
+  defdelegate parse(program), to: ParserImpl
 
 end
