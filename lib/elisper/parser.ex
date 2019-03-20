@@ -8,5 +8,4 @@ defmodule Elisper.Parser do
   Parse a scheme expression.
   """
   defdelegate parse(program), to: ParserImpl
-
 end

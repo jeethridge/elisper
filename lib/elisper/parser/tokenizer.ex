@@ -1,7 +1,7 @@
 defmodule Elisper.Parser.Tokenizer do
-@moduledoc """
-Tokenizer for the Elisper Parser.
-"""
+  @moduledoc """
+  Tokenizer for the Elisper Parser.
+  """
   @op_chars ["+", "-", "*", "/", "%", "=", "&", "|", "<", ">", "!", "'"]
   @special_forms ["begin", "define", "if"]
 
@@ -22,7 +22,7 @@ Tokenizer for the Elisper Parser.
   end
 
   def token(str) do
-    ":"<>str
+    ":" <> str
   end
 
   def primative(str) do
@@ -30,15 +30,16 @@ Tokenizer for the Elisper Parser.
       is_numeric(str) ->
         {num, _} = Float.parse(str)
         num
-      true -> str
+
+      true ->
+        str
     end
   end
 
   def is_numeric(str) do
     case Float.parse(str) do
       {_num, ""} -> true
-      _          -> false
+      _ -> false
     end
   end
-
 end

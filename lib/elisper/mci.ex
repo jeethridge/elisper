@@ -3,6 +3,7 @@ defmodule Elisper.MCI do
   Defines the top level meta-circular evaluator.
   """
   import Elisper.{EvalConds, EvalActions, ApplyActions, ApplyConds}
+
   @doc """
   eval: Let's start with a naive implementation based on SICP
   and go from there.
@@ -33,5 +34,4 @@ defmodule Elisper.MCI do
       true -> raise "Dream what you like, but you dare not sleep"
     end
   end
-
 end

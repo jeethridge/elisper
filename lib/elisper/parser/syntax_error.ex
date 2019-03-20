@@ -4,5 +4,4 @@ defmodule Elisper.Parser.SyntaxError do
   def full_message(error) do
     "Elisper Syntax Error: #{error.message}"
   end
-
 end
