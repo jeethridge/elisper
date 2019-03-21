@@ -1,43 +1,38 @@
 defmodule Elisper.Parser.AST do
   @moduledoc """
-  This module is responsible for building the abstract syntax tree from a token stream.
-
-  ## TODO -- we're almost there! The issue with this approach is that we want
-  tokens to act like a "peristent" stack that we can pop off of while
-  we append on to list.
+  This module builds an abstract syntax tree from a token stream.
   """
-  defstruct [:tokens, :tree]
+  def build(tokens, ast) do
+    build_ast(tokens, ast)
+  end
 
   # No tokens to process, return the list
-  def build([], list) do
-    IO.inspect list
-    list
+  def build_ast([], list) do
+    {:ok, [], list}
   end
 
   # Start a new list with empty AST
-  def build(["(" | tokens], []) do
-    IO.puts("Start list")
-    list = build(tokens, [])
+  def build_ast(["(" | tokens], []) do
+    build_ast(tokens, [])
   end
 
   # Add a new list to existing AST
-  def build(["(" | tokens], list) do
-    list = list ++ [build(tokens, [])]
-    build(tokens, list)
+  def build_ast(["(" | tokens], list) do
+    {:ok, remaining_tokens, new_list } = build_ast(tokens, [])
+    list = list ++ [new_list]
+    build_ast(remaining_tokens, list)
   end
 
   # Finish a list
-  def build([")" | tokens], list) do
-    IO.puts("End list")
-    list
+  def build_ast([")" | tokens], list) do
+    {:ok, tokens, list}
   end
 
   # A list starting with a regular token appends a token to the list
   # and then keeps building
-  def build([token | rest], list) do
-    IO.puts("Processing token #{token}")
+  def build_ast([token | rest], list) do
     list = list ++ [token]
-    build(rest, list)
+    build_ast(rest, list)
   end
 
 end
