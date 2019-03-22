@@ -20,7 +20,8 @@ defmodule Elisper.Parser.Tokenizer do
   end
 
   def token(str) do
-    ":" <> str
+    {:ok, token} = Code.string_to_quoted(":" <> str)
+    token
   end
 
   def primative(str) do
