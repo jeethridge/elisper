@@ -2,8 +2,7 @@ defmodule Elisper.Parser.Tokenizer do
   @moduledoc """
   Tokenizer for the Elisper Parser.
   """
-  @op_chars ["+", "-", "*", "/", "%", "=", "&", "|", "<", ">", "!", "'"]
-  @special_forms ["begin", "define", "if"]
+  alias Elisper.Grammar
 
   def tokenize(str) do
     str
@@ -15,14 +14,14 @@ defmodule Elisper.Parser.Tokenizer do
 
   def mark_token(str) do
     cond do
-      str in @op_chars -> token(str)
-      str in @special_forms -> token(str)
+      str in Grammar.strings -> token(str)
       true -> primative(str)
     end
   end
 
   def token(str) do
-    ":" <> str
+    {:ok, token} = Code.string_to_quoted(":" <> str)
+    token
   end
 
   def primative(str) do
