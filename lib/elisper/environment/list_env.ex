@@ -29,22 +29,22 @@ This implementation most closely represents the implementation in SICP.
   # The following are helper operations that allow us to represent the environment as a list of frames
 
   # The enclosing env of an env is the rest tail of the list
-  def enclosing_environment([ _, enclosing ]), do: enclosing
+  def enclosing_environment([ _ , enclosing ]), do: enclosing
 
   # The first frame is the head of the list
-  def first_frame([ first_frame, _ ]), do: first_frame
+  def first_frame([ first_frame , _ ]), do: first_frame
 
   # Each frame is a pair of lists
   def make_frame(variables, values), do: [variables, values]
 
   # Get the variables in a frame
-  def frame_variables([ variables, _ ]), do: variables
+  def frame_variables([ variables , _ ]), do: variables
 
   # Get the values in a fram
-  def frame_values([ _, values ]), do: values
+  def frame_values([ _ , values ]), do: values
 
   # Add a new binding to a frame
   def add_binding_to_frame(variable, value, frame) do
-    nil
+    [[variable | frame_variables(frame)], [value | frame_values(frame)]]
   end
 end
