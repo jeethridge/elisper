@@ -15,4 +15,11 @@ defmodule ListEnvTest do
     assert frame == expected_frame
   end
 
+  test "frame_variables returns variables" do
+    expected_variables = ["x", "y", "z"]
+    frame = [["x", "y", "z"], [1, 2, 3]]
+    variables = ListEnv.frame_variables(frame)
+    assert variables == expected_variables
+  end
+
 end
