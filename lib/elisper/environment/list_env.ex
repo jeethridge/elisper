@@ -3,6 +3,7 @@ defmodule Elisper.Environment.ListEnv do
 Provides a concrete implementation of the Environment API using linked lists to build environments.
 This implementation most closely represents the implementation in SICP.
 """
+  alias Elisper.Environment.UnboundVariableError
 
   # Returns the global environment
   def global(), do: empty()
@@ -11,11 +12,11 @@ This implementation most closely represents the implementation in SICP.
   def empty(), do: []
 
   # Return the value bound to the symbol
-  def lookup_variable_value(variable, env) do
-  end
+  def lookup_variable_value(variable, []), do: raise UnboundVariableError
 
   # Return a new environment consisting of a new frame with the variables bound to the values
-  def extend_environment(varables, values, base_env) do
+  def extend_environment(variables, values, base_env) do
+    [make_frame(variables, values), base_env]
   end
 
   # Add a new binding to the first frame in the environment

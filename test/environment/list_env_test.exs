@@ -2,6 +2,7 @@ defmodule ListEnvTest do
   use ExUnit.Case
 
   alias Elisper.Environment.ListEnv
+  alias Elisper.Environment.UnboundVariableError
 
   test "empty environment is empty list" do
     assert ListEnv.empty == []
@@ -35,5 +36,49 @@ defmodule ListEnvTest do
     new_frame = ListEnv.add_binding_to_frame("foo", "bar", frame)
     assert new_frame == expected_frame
   end
+
+ test "extend environment appends new frame to current environment" do
+    base_environment = []
+    vars = [ "x" ]
+    vals = [ 1 ]
+    new_frame = [ vars , vals ]
+    expected_environment = [ new_frame , base_environment ]
+    new_environment = ListEnv.extend_environment(vars, vals, base_environment)
+    assert new_environment == expected_environment
+ end
+
+ # TODO error handling things
+ @tag :ignore
+ test "extend environment signals error if the number of vars and vals don't match" do
+    base_environment = []
+    vars = ["x, y"]
+    vals = [1]
+    assert_raise UnboundVariableError, ListEnv.extend_environment(vars, vals, base_environment)
+ end
+
+  test "lookup variable raises unbound variable error when empty env" do
+    env = []
+    var = "x"
+    assert_raise UnboundVariableError, fn -> ListEnv.lookup_variable_value(var, env) end
+  end
+
+  @tag :ignore
+  test "lookup variable finds variable when in first frame" do
+    var = "x"
+    val = 1
+    env = [ [[var],[val]], [] ]
+    actual = ListEnv.lookup_variable_value(var, env)
+    assert actual == val
+  end
+
+  @tag :ignore
+  test "lookup variable finds variable when not in first frame" do
+    var = "x"
+    val = 1
+    env = [ [["foo"], ["bar"]], [[var],[val]], [] ]
+    actual = ListEnv.lookup_variable_value(var, env)
+    assert actual == val
+  end
+
 
 end
