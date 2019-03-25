@@ -13,11 +13,13 @@ This implementation most closely represents the implementation in SICP.
 
   # Return the value bound to the symbol
   def lookup_variable_value(variable, []), do: raise UnboundVariableError
+  def lookup_variable_value(variable, env) do
+    frame = first_frame(env)
+    result = find_in_frame(variable, frame)
+  end
 
   # Return a new environment consisting of a new frame with the variables bound to the values
-  def extend_environment(variables, values, base_env) do
-    [make_frame(variables, values), base_env]
-  end
+  def extend_environment(variables, values, base_env), do: [make_frame(variables, values), base_env]
 
   # Add a new binding to the first frame in the environment
   def define_variable(variable, value, env) do
@@ -48,4 +50,15 @@ This implementation most closely represents the implementation in SICP.
   def add_binding_to_frame(variable, value, frame) do
     [[variable | frame_variables(frame)], [value | frame_values(frame)]]
   end
+
+  # Try to find a variable value in the frame
+  def find_in_frame(var, frame) do
+    vars = frame_variables(frame)
+    idx = Enum.find_index(vars, fn (item) -> item == var end)
+    if idx != nil do
+      {:ok, val } = Enum.fetch(frame_values(frame), idx)
+      val
+    end
+  end
+
 end
