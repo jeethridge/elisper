@@ -66,6 +66,19 @@ defmodule ListEnvTest do
   assert ListEnv.find_in_frame("q", frame) == nil
  end
 
+ test "first_frame returns first frame" do
+  first_frame = [["x"], [1]]
+  enclosing = [["y"], [2]]
+  env = [ first_frame  , enclosing ]
+  assert ListEnv.first_frame(env) == first_frame
+ end
+
+ test "enclosing_environment returns enclosing" do
+  first_frame = [["x"], [1]]
+  enclosing = [["y"], [2]]
+  env = [ first_frame  , enclosing ]
+  assert ListEnv.enclosing_environment(env) == enclosing
+ end
 
   test "lookup variable raises unbound variable error when empty env" do
     env = []
@@ -81,11 +94,13 @@ defmodule ListEnvTest do
     assert actual == val
   end
 
-  @tag :ignore
   test "lookup variable finds variable when not in first frame" do
     var = "x"
     val = 1
-    env = [ [["foo"], ["bar"]], [[var],[val]], [] ]
+    first_frame = [ ["foo"], ["bar"] ]
+    next_frame = [ [var], [val] ]
+    base_env = [ next_frame, [] ]
+    env = [ first_frame , base_env  ]
     actual = ListEnv.lookup_variable_value(var, env)
     assert actual == val
   end

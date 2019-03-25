@@ -16,6 +16,10 @@ This implementation most closely represents the implementation in SICP.
   def lookup_variable_value(variable, env) do
     frame = first_frame(env)
     result = find_in_frame(variable, frame)
+    case result do
+      nil -> lookup_variable_value(variable, enclosing_environment(env))
+      _ -> result
+    end
   end
 
   # Return a new environment consisting of a new frame with the variables bound to the values
