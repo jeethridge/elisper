@@ -22,6 +22,12 @@ This implementation most closely represents the implementation in SICP.
     end
   end
 
+  # Bind the variable in the environment to the new value - error if variable unbound
+  def set_variable_value(variable, _, []), do: raise UnboundVariableError
+  def set_variable_value(variable, value, env) do
+    nil
+  end
+
   # Return a new environment consisting of a new frame with the variables bound to the values
   def extend_environment(variables, values, base_env), do: [make_frame(variables, values), base_env]
 
@@ -29,9 +35,7 @@ This implementation most closely represents the implementation in SICP.
   def define_variable(variable, value, env) do
   end
 
-  # Bind the variable in the environment to the new value - error if variable unbound
-  def set_variable_value(variable, value, env) do
-  end
+
 
   # The following are helper operations that allow us to represent the environment as a list of frames
 
@@ -63,6 +67,11 @@ This implementation most closely represents the implementation in SICP.
       {:ok, val } = Enum.fetch(frame_values(frame), idx)
       val
     end
+  end
+
+  # Try to replace a variable value in the frame
+  def replace_in_frame(var, frame) do
+    nil
   end
 
 end

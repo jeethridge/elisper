@@ -105,4 +105,11 @@ defmodule ListEnvTest do
     assert actual == val
   end
 
+  test "set variable value raises error when variable doesn't exist" do
+    env = []
+    var = "x"
+    assert_raise UnboundVariableError, fn -> ListEnv.set_variable_value(var, 0, env) end
+  end
+
+
 end
