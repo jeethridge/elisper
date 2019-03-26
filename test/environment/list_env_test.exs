@@ -47,13 +47,10 @@ defmodule ListEnvTest do
     assert new_environment == expected_environment
  end
 
- # TODO error handling things
- @tag :ignore
  test "extend environment signals error if the number of vars and vals don't match" do
-    base_environment = []
-    vars = ["x, y"]
+    vars = ["x", "y"]
     vals = [1]
-    assert_raise UnboundVariableError, ListEnv.extend_environment(vars, vals, base_environment)
+    assert_raise UnboundVariableError, fn -> ListEnv.extend_environment(vars, vals, []) end
  end
 
  test "find_in_frame finds value when in frame" do
@@ -111,5 +108,21 @@ defmodule ListEnvTest do
     assert_raise UnboundVariableError, fn -> ListEnv.set_variable_value(var, 0, env) end
   end
 
+  test "replace in frame returns updated frame" do
+    frame = [["x", "y", "z"], [1, 2, 3]]
+    expected  = [["x", "y", "z"], [1, 17, 3]]
+    assert ListEnv.replace_in_frame("y", 17, frame) == expected
+  end
 
+  test "set variable value returns updated environment when success" do
+    var = "x"
+    val = 2
+    first_frame = [ ["foo"], ["bar"] ]
+    base_env = [ [ [var], [1] ], [] ]
+    expected_base_env = [ [ [var], [val] ], [] ]
+    env = [ first_frame , base_env  ]
+    expected_env = [ first_frame , expected_base_env ]
+    updated_env = ListEnv.set_variable_value(var, val, env)
+    assert updated_env == expected_env
+  end
 end
