@@ -1,7 +1,7 @@
 defmodule Elisper.Environment.ListEnv do
 @moduledoc """
 Provides a concrete implementation of the Environment API using linked lists to build environments.
-This implementation most closely represents the implementation in SICP.
+This implementation is far from optimal but closely represents the implementation in SICP.
 """
   alias Elisper.Environment.UnboundVariableError
 
@@ -23,14 +23,16 @@ This implementation most closely represents the implementation in SICP.
   end
 
   # Bind the variable in the environment to the new value - error if variable unbound
-  def set_variable_value(variable, _, []), do: raise UnboundVariableError
+  def set_variable_value(variable, _, []), do: {:unbound, []}
   def set_variable_value(variable, value, env) do
       [frame, rest] = env
       result = find_in_frame(variable, frame)
       case result do
-        nil -> [frame, set_variable_value(variable, value, enclosing_environment(env))]
+        nil ->
+          { result , env } = set_variable_value(variable, value, enclosing_environment(env))
+          { result, [frame, env] }
         _ -> updated_frame = replace_in_frame(variable, value, frame)
-             [updated_frame, rest]
+            { :ok, [updated_frame, rest] }
       end
   end
 
@@ -38,8 +40,13 @@ This implementation most closely represents the implementation in SICP.
   def extend_environment(variables, values, _) when length(variables) != length(values), do: raise UnboundVariableError
   def extend_environment(variables, values, base_env), do: [make_frame(variables, values), base_env]
 
-  # Add a new binding to the first frame in the environment
-  def define_variable(variable, value, env) do
+  # Define a new variable or update if variable already bound
+  def define_variable(variable, value, [first_frame, enclosing] = env) do
+    {result, env} = set_variable_value(variable, value, env)
+    case result do
+      :unbound -> [add_binding_to_frame(variable, value, first_frame), enclosing ]
+      :ok -> env
+    end
   end
 
   # The following are helper operations that allow us to represent the environment as a list of frames
@@ -60,8 +67,9 @@ This implementation most closely represents the implementation in SICP.
   def frame_values([ _ , values ]), do: values
 
   # Add a new binding to a frame
+  def add_binding_to_frame(variable, value, []), do: [[variable], [value]]
   def add_binding_to_frame(variable, value, frame) do
-    [[variable | frame_variables(frame)], [value | frame_values(frame)]]
+    [ [variable] ++ frame_variables(frame),  [value] ++ frame_values(frame) ]
   end
 
   # Try to find a variable value in the frame

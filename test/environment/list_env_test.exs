@@ -102,10 +102,12 @@ defmodule ListEnvTest do
     assert actual == val
   end
 
-  test "set variable value raises error when variable doesn't exist" do
+  test "set variable value returns none when variable doesn't exist" do
     env = []
     var = "x"
-    assert_raise UnboundVariableError, fn -> ListEnv.set_variable_value(var, 0, env) end
+    { result, updated_env } = ListEnv.set_variable_value(var, 0, env)
+    assert result == :unbound
+    assert updated_env == env
   end
 
   test "replace in frame returns updated frame" do
@@ -122,7 +124,38 @@ defmodule ListEnvTest do
     expected_base_env = [ [ [var], [val] ], [] ]
     env = [ first_frame , base_env  ]
     expected_env = [ first_frame , expected_base_env ]
-    updated_env = ListEnv.set_variable_value(var, val, env)
+    { result, updated_env } = ListEnv.set_variable_value(var, val, env)
+    assert updated_env == expected_env
+    assert result == :ok
+  end
+
+  test "add_binding_to_frame adds new binding" do
+    var = "x"
+    val = 3.14
+    frame = [ ["hello"], ["world"] ]
+    expected_frame = [ ["x", "hello"], [3.14, "world"] ]
+    assert ListEnv.add_binding_to_frame(var, val, frame) == expected_frame
+  end
+
+  test "define variable updates variable if vaiable already bound" do
+    var = "x"
+    val = 2
+    first_frame = [ ["foo"], ["bar"] ]
+    base_env = [ [ [var], [1] ], [] ]
+    expected_base_env = [ [ [var], [val] ], [] ]
+    env = [ first_frame , base_env ]
+    expected_env = [ first_frame , expected_base_env ]
+    updated_env = ListEnv.define_variable(var, val, env)
     assert updated_env == expected_env
   end
+
+  test "define variable adds variable to first frame when unbound in environment" do
+    var = "job"
+    val = "SRE"
+    first_frame = [ ["name"], ["Jill"] ]
+    env = [ first_frame, [] ]
+    expected_env = [ [["job", "name"], ["SRE", "Jill"]] , [] ]
+    assert ListEnv.define_variable(var, val, env) == expected_env
+  end
+
 end
