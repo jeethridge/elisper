@@ -53,5 +53,4 @@ defmodule AstTest do
     assert remaining_tokens == []
     assert actual == expected
   end
-
 end

@@ -18,7 +18,7 @@ defmodule Elisper.Parser.AST do
 
   # Add a new list to existing AST
   def build_ast(["(" | tokens], list) do
-    {:ok, remaining_tokens, new_list } = build_ast(tokens, [])
+    {:ok, remaining_tokens, new_list} = build_ast(tokens, [])
     list = list ++ [new_list]
     build_ast(remaining_tokens, list)
   end
@@ -34,5 +34,4 @@ defmodule Elisper.Parser.AST do
     list = list ++ [token]
     build_ast(rest, list)
   end
-
 end

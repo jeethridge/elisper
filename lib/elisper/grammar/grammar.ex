@@ -8,5 +8,4 @@ defmodule Elisper.Grammar do
   def strings() do
     grammar_list = @op_chars ++ @special_forms
   end
-
 end

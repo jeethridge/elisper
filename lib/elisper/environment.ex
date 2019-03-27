@@ -1,7 +1,7 @@
 defmodule Elisper.Environment do
-@moduledoc """
-Defines the environment API for Elisper.
-"""
+  @moduledoc """
+  Defines the environment API for Elisper.
+  """
   alias Elisper.Environment.ListEnv
 
   # Get the global environment
@@ -17,6 +17,5 @@ Defines the environment API for Elisper.
   defdelegate define_variable(variable, value, env), to: ListEnv
 
   # Bind the variable in the environment to the new value - error if variable unbound
-  defdelegate  set_variable_value(variable, value, env), to: ListEnv
-
+  defdelegate set_variable_value(variable, value, env), to: ListEnv
 end

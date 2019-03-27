@@ -14,7 +14,7 @@ defmodule Elisper.Parser.Tokenizer do
 
   def mark_token(str) do
     cond do
-      str in Grammar.strings -> token(str)
+      str in Grammar.strings() -> token(str)
       true -> primative(str)
     end
   end
