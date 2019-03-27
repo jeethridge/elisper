@@ -1,18 +1,21 @@
 defmodule Elisper.Environment.ListEnv do
   @moduledoc """
-  Provides a concrete implementation of the Environment API using linked lists to build environments.
-  This implementation is far from optimal but closely represents the implementation in SICP.
+  Provides a concrete implementation of the Environment API.
+
+  This implementation is far from optimal but
+  resembles the implementation in SICP using linked lists.
   """
   alias Elisper.Environment.UnboundVariableError
 
-  # Returns the global environment
-  def global(), do: empty()
-
-  # The empty environment
+  @doc """
+  Get an empty environment.
+  """
   def empty(), do: []
 
-  # Return the value bound to the symbol
-  def lookup_variable_value(variable, []), do: raise(UnboundVariableError)
+  @doc """
+  Looks up the specified variable in the supplied environment.
+  """
+  def lookup_variable_value(_, []), do: raise(UnboundVariableError)
 
   def lookup_variable_value(variable, env) do
     frame = first_frame(env)
@@ -24,11 +27,17 @@ defmodule Elisper.Environment.ListEnv do
     end
   end
 
-  # Bind the variable in the environment to the new value - error if variable unbound
-  def set_variable_value(variable, _, []), do: {:unbound, []}
+  @doc """
+  Binds the variable in the environment to the new value.
+
+  Returns:
+    - {:unboud, env} when variable is unbound
+    - {:ok, env} when variable set successfully
+  """
+  def set_variable_value(_, _, []), do: {:unbound, []}
 
   def set_variable_value(variable, value, env) do
-    [frame, rest] = env
+    [frame, enclosing] = env
     result = find_in_frame(variable, frame)
 
     case result do
@@ -38,18 +47,22 @@ defmodule Elisper.Environment.ListEnv do
 
       _ ->
         updated_frame = replace_in_frame(variable, value, frame)
-        {:ok, [updated_frame, rest]}
+        {:ok, [updated_frame, enclosing]}
     end
   end
 
-  # Return a new environment consisting of a new frame with the variables bound to the values
+  @doc """
+  Returns a new environment containing a new frame with the variables bound to the values.
+  """
   def extend_environment(variables, values, _) when length(variables) != length(values),
     do: raise(UnboundVariableError)
 
-  def extend_environment(variables, values, base_env),
-    do: [make_frame(variables, values), base_env]
+  def extend_environment(variables, values, env),
+    do: [make_frame(variables, values), env]
 
-  # Define a new variable or update if variable already bound
+  @doc """
+  Defines a new variable or update if variable already bound
+  """
   def define_variable(variable, value, [first_frame, enclosing] = env) do
     {result, env} = set_variable_value(variable, value, env)
 
@@ -59,31 +72,43 @@ defmodule Elisper.Environment.ListEnv do
     end
   end
 
-  # The following are helper operations that allow us to represent the environment as a list of frames
-
-  # The enclosing env of an env is the rest tail of the list
+  @doc """
+    Gets the "enclosing" environment consisting of all trailing frames.
+  """
   def enclosing_environment([_, enclosing]), do: enclosing
 
-  # The first frame is the head of the list
+  @doc """
+    Gets the first frame in the supplied environment.
+  """
   def first_frame([first_frame, _]), do: first_frame
 
-  # Each frame is a pair of lists
+  @doc """
+  Makes a new frame given a list varaibles and a list of values to be bound.
+  """
   def make_frame(variables, values), do: [variables, values]
 
-  # Get the variables in a frame
+  @doc """
+  Gets the list of variables in the specified frame.
+  """
   def frame_variables([variables, _]), do: variables
 
-  # Get the values in a fram
+  @doc """
+  Gets the list of bound values in the specified frame.
+  """
   def frame_values([_, values]), do: values
 
-  # Add a new binding to a frame
+  @doc """
+  Adds a new variable binding to a frame.
+  """
   def add_binding_to_frame(variable, value, []), do: [[variable], [value]]
 
   def add_binding_to_frame(variable, value, frame) do
     [[variable] ++ frame_variables(frame), [value] ++ frame_values(frame)]
   end
 
-  # Try to find a variable value in the frame
+  @doc """
+  Tries to find the value bound to specified variable in the supplied frame.
+  """
   def find_in_frame(var, frame) do
     vars = frame_variables(frame)
     idx = Enum.find_index(vars, fn item -> item == var end)
@@ -94,7 +119,9 @@ defmodule Elisper.Environment.ListEnv do
     end
   end
 
-  # Try to replace a variable value in the frame
+  @doc """
+  Tries to replace a variable value in the supplied frame.
+  """
   def replace_in_frame(var, val, [vars, vals]) do
     tframe =
       Enum.zip(vars, vals)
