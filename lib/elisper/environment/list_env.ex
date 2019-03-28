@@ -18,12 +18,10 @@ defmodule Elisper.Environment.ListEnv do
   """
   def lookup_variable_value(_, []), do: raise(UnboundVariableError)
 
-  def lookup_variable_value(variable, env) do
-    frame = first_frame(env)
-    result = Frame.find_in_frame(variable, frame)
-
+  def lookup_variable_value(variable, [frame, enclosing]) do
+    result = Frame.find(variable, frame)
     case result do
-      nil -> lookup_variable_value(variable, enclosing_environment(env))
+      nil -> lookup_variable_value(variable, enclosing)
       _ -> result
     end
   end
@@ -37,17 +35,16 @@ defmodule Elisper.Environment.ListEnv do
   """
   def set_variable_value(_, _, []), do: {:unbound, []}
 
-  def set_variable_value(variable, value, env) do
-    [frame, enclosing] = env
-    result = Frame.find_in_frame(variable, frame)
+  def set_variable_value(variable, value, [frame, enclosing]) do
+    result = Frame.find(variable, frame)
 
     case result do
       nil ->
-        {result, env} = set_variable_value(variable, value, enclosing_environment(env))
+        {result, env} = set_variable_value(variable, value, enclosing)
         {result, [frame, env]}
 
       _ ->
-        updated_frame = Frame.replace_in_frame(variable, value, frame)
+        updated_frame = Frame.replace(variable, value, frame)
         {:ok, [updated_frame, enclosing]}
     end
   end
@@ -59,21 +56,17 @@ defmodule Elisper.Environment.ListEnv do
     do: raise(UnboundVariableError)
 
   def extend_environment(variables, values, env),
-    do: [Frame.make_frame(variables, values), env]
+    do: [Frame.new(variables, values), env]
 
   @doc """
   Defines a new variable or update if variable already bound
   """
-  def define_variable(variable, value, [first_frame, enclosing] = env) do
+  def define_variable(variable, value, [frame, enclosing] = env) do
     {result, env} = set_variable_value(variable, value, env)
 
     case result do
-      :unbound -> [Frame.add_binding_to_frame(variable, value, first_frame), enclosing]
+      :unbound -> [Frame.bind(variable, value, frame), enclosing]
       :ok -> env
     end
   end
-
-  defp enclosing_environment([_, enclosing]), do: enclosing
-  defp first_frame([first_frame, _]), do: first_frame
-
 end
