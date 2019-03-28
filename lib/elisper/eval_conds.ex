@@ -7,7 +7,9 @@ defmodule Elisper.EvalConds do
   def self_evaluating?(exp) when is_binary(exp), do: true
   def self_evaluating?(_), do: false
 
-  def variable?(exp), do: false
+  def variable?(exp) when is_atom(exp), do: true
+  def variable?(_), do: false
+
   def quoted?(exp), do: false
   def assignment?(exp), do: false
   def definition?(exp), do: false
