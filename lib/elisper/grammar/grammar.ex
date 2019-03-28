@@ -6,7 +6,6 @@ defmodule Elisper.Grammar do
   @special_forms ["begin", "define", "if"]
 
   def strings() do
-    grammar_list = @op_chars ++ @special_forms
+    @op_chars ++ @special_forms
   end
-
 end

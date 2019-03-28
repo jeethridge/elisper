@@ -4,6 +4,7 @@ defmodule Elisper.Parser.Parser do
   """
   alias Elisper.Parser.Tokenizer
   alias Elisper.Parser.AST
+
   @doc """
   Reads a scheme expression from a string and returns the abstract syntax tree.
   """
