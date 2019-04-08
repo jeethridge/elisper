@@ -3,13 +3,18 @@ defmodule Elisper.EvalCondsTest do
   import Elisper.EvalConds
 
   test "numbers and strings are self evaluating" do
-    assert self_evaluating?(2.718) == true
-    assert self_evaluating?("sally is a monster of a snake") == true
-    assert self_evaluating?([:define, :x, 1]) == false
+    assert self_evaluating?(2.718)
+    assert self_evaluating?("sally is a monster of a snake")
+    assert not self_evaluating?([:define, :x, 1])
   end
 
   test "variables are atoms" do
-    assert variable?("hello") == false
-    assert variable?(:hello) == true
+    assert not variable?("hello")
+    assert variable?(:hello)
+  end
+
+  test "quoted expressions start with quoted keyword" do
+    assert quoted?([:quoted, "+ 1 1"])
+    assert not quoted?([ "+ 1 1" ])
   end
 end
