@@ -16,8 +16,11 @@ defmodule Elisper.EvalConds do
   def assignment?(_), do: false
   def definition?([:define, _var, _val]), do: true
   def definition?(_), do: false
-  def if?(exp), do: false
-  def lambda?(exp), do: false
+  def if?([:if, _predicate, _consequent, _alternative]), do: true
+  def if?([:if, _predicate, _consequent]), do: true
+  def if?(_), do: false
+  def lambda?([:lambda, _params, _body]), do: true
+  def lambda?(_), do: false
   def begin?(exp), do: false
   def cond?(exp), do: false
   def application?(exp), do: false
