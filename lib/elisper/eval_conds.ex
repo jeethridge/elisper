@@ -12,8 +12,10 @@ defmodule Elisper.EvalConds do
   def quoted?([:quoted | _]), do: true
   def quoted?(_), do: false
 
-  def assignment?(exp), do: false
-  def definition?(exp), do: false
+  def assignment?([:set!, _var, _val]), do: true
+  def assignment?(_), do: false
+  def definition?([:define, _var, _val]), do: true
+  def definition?(_), do: false
   def if?(exp), do: false
   def lambda?(exp), do: false
   def begin?(exp), do: false

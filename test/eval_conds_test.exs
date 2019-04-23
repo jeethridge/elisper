@@ -17,4 +17,17 @@ defmodule Elisper.EvalCondsTest do
     assert quoted?([:quoted, "+ 1 1"])
     assert not quoted?([ "+ 1 1" ])
   end
+
+  test "assignments have the form (set! <var> <val>)" do
+    assert assignment?([:set!, :x, 100])
+    assert not assignment?([:x, 100])
+  end
+
+  test "definitions can take the form (define <var> <val>)" do
+    assert definition?([:define, :y, "hello"])
+  end
+
+  test "deinitions can take the form (define, (<var> <param₁> … <param>) <body>)" do
+    assert definition?([:define, [:add, :x, :y], [:+, :x, :y]])
+  end
 end
