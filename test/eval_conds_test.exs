@@ -27,7 +27,7 @@ defmodule Elisper.EvalCondsTest do
     assert definition?([:define, :y, "hello"])
   end
 
-  test "definitions can take the form (define, (<var> <param₁> … <param>) <body>)" do
+  test "definitions can take the form (define, (<var> <param_1> … <param_n>) <body>)" do
     assert definition?([:define, [:add, :x, :y], [:+, :x, :y]])
   end
 
@@ -41,6 +41,19 @@ defmodule Elisper.EvalCondsTest do
   end
 
   test "if expressions can take the form of (if <predicate> <consequent>)" do
-    assert if?([:if, [:=, :x, 2], [:set!, :y, 1])
+    assert if?([:if, [:=, :x, 2], [:set!, :y, 1]])
   end
+
+  test "begin expressions take the form (begin <expr_1>...<expr_n>)" do
+    assert begin?([:begin, [:define, :r, 10], [:*, :pi, [:*, :r, :r]]])
+  end
+
+  test "cond expressions take the form (cond (<predicate> <consequent> <optional_alternative>) ... ())" do
+    assert cond?([:cond, [[:>, :x, 2], :x], [[:>, :y, 0], [:print, :y], [:print, 0]]])
+  end
+
+  test "applications are a pair of operators and operands" do
+    assert application?([[:define, :x, 1],[:*, :x, 2]])
+  end
+
 end

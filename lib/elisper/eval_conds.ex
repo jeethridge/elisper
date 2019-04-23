@@ -21,7 +21,12 @@ defmodule Elisper.EvalConds do
   def if?(_), do: false
   def lambda?([:lambda, _params, _body]), do: true
   def lambda?(_), do: false
-  def begin?(exp), do: false
-  def cond?(exp), do: false
-  def application?(exp), do: false
+
+  def begin?([:begin | _]), do: true
+  def begin?(_), do: false
+
+  def cond?([:cond | _]), do: true
+  def cond?(_), do: false
+  def application?([_operator | _operands]), do: true
+  def application?(_), do: false
 end
