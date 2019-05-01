@@ -4,5 +4,4 @@ defmodule Elisper do
   """
   alias Elisper.MCI
   defdelegate eval(exp, env), to: MCI
-  defdelegate apply(procedure, arguments), to: MCI
 end

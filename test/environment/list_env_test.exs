@@ -8,6 +8,11 @@ defmodule ListEnvTest do
     assert ListEnv.empty() == []
   end
 
+  # TODO might not want this to live under ListEnv.
+  test "global environment not empty" do
+    assert [] != ListEnv.global()
+  end
+
   test "extend environment appends new frame to current environment" do
     base_environment = []
     vars = ["x"]

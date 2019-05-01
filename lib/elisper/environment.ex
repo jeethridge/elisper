@@ -5,7 +5,7 @@ defmodule Elisper.Environment do
   alias Elisper.Environment.ListEnv
 
   # Get the global environment
-  defdelegate global(), to: ListEnv, as: :empty
+  defdelegate global(), to: ListEnv, as: :global
 
   # Return the value bound to the symbol
   defdelegate lookup_variable_value(variable, env), to: ListEnv

@@ -7,8 +7,6 @@ defmodule Elisper.Parser.Tokenizer do
   or "the \"quick\" brown fox". Will need to come back and build a
   better tokenizer for that.
   """
-  alias Elisper.Grammar
-
   def tokenize(buffer) do
     buffer
     |> String.replace("(", " ( ")
