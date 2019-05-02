@@ -8,13 +8,13 @@ defmodule Elisper.Driver do
 
   ## Examples
 
-   iex> Elisper.Driver.repl(nil, &IO.inspect(&1))
+   iex> Elisper.Driver.repl(&IO.inspect(&1))
 
-   iex> Elisper.Driver.repl(Elisper.Environment.global(), &Elisper.evaluate(&1))
+   iex> Elisper.Driver.repl(&Elisper.evaluate(&1))
   """
-  def repl(env \\ nil, run) do
+  def repl(run) do
     prog = IO.gets "elisper>"
     run.(prog)
-    repl(env, run)
+    repl(run)
   end
 end

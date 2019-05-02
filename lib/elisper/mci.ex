@@ -19,7 +19,7 @@ defmodule Elisper.MCI do
       lambda?(exp) -> make_procedure(lambda_parameters(exp), lambda_body(exp))
       begin?(exp) -> eval_sequence( begin_actions(exp), env)
       cond?(exp) -> eval(cond_if(exp), env)
-      application?(exp) -> apply( eval(operator(exp), env), list_of_values( operands(exp), env) )
+      application?(exp) -> elisper_apply( eval(operator(exp), env), list_of_values( operands(exp), env) )
       true -> raise "Dishing out the plastic, do the dance till you spastic!"
     end
   end
@@ -28,6 +28,9 @@ defmodule Elisper.MCI do
   apply: ditto
   """
   def elisper_apply(procedure, arguments) do
+    IO.puts "Caling apply"
+    IO.inspect procedure
+    IO.inspect arguments
     cond do
       primitive_procedure?(procedure) -> apply_primitive_procedure(procedure, arguments)
       compound_procedure?(procedure) ->
@@ -43,7 +46,7 @@ defmodule Elisper.MCI do
     end
   end
 
-  def list_of_values(exp, env), do: nil
+  def list_of_values(exp, env), do: exp
   def text_of_quoutation(exp), do: nil
   def eval_assignment(exp, env), do: nil
   def eval_definition(exp, env), do: nil
@@ -55,15 +58,23 @@ defmodule Elisper.MCI do
   def begin_actions(exp), do: nil
   def cond_if(exp), do: nil
 
-  # TODO Start with these along with apply conds and you will understand better what to do next.
-  def apply_primitive_procedure(procedure, arguments), do: nil
+
+  @doc """
+  Apply a primative procedure to its arguments.
+  """
+  @spec apply_primitive_procedure(any(), any()) :: nil
+  def apply_primitive_procedure(procedure, arguments) do
+    IO.puts "apply primative"
+    env = Elisper.Environment.global()
+    procedure.(arguments, &Elisper.MCI.eval/2, env)
+  end
 
   def eval_sequence(procedure_body, procedure), do: nil
   def procedure_body(procedure), do: nil
   @spec procedure_environment(any()) :: nil
   def procedure_environment(procedure), do: nil
   def procedure_parameters(procedure), do: nil
-  def operator([operator, _]), do: operator
-  def operands([_, operands]), do: operands
+  def operator([operator | _]), do: operator
+  def operands([_ | operands]), do: operands
   def no_operands?([]), do: true
 end

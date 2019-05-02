@@ -3,9 +3,10 @@ defmodule Elisper.Environment do
   Defines the environment API for Elisper.
   """
   alias Elisper.Environment.ListEnv
+  alias Elisper.Environment.ListGlobal
 
   # Get the global environment
-  defdelegate global(), to: ListEnv, as: :global
+  defdelegate global(), to: ListGlobal, as: :init
 
   # Return the value bound to the symbol
   defdelegate lookup_variable_value(variable, env), to: ListEnv

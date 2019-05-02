@@ -7,17 +7,11 @@ defmodule Elisper.Environment.ListEnv do
   """
   alias Elisper.Environment.UnboundVariableError
   alias Elisper.Environment.ListFrame, as: Frame
-  alias Elisper.Environment.ListGlobal, as: Global
 
   @doc """
   Get an empty environment.
   """
   def empty(), do: []
-
-  @doc """
-  Get the global environment.
-  """
-  def global(), do: Global.init(empty())
 
   @doc """
   Looks up the specified variable in the supplied environment.

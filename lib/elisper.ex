@@ -3,5 +3,5 @@ defmodule Elisper do
   API for the Elisper interpreter.
   """
   alias Elisper.MCI
-  defdelegate eval(exp, env), to: MCI
+  defdelegate evaluate(expression), to: MCI
 end
