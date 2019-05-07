@@ -12,9 +12,9 @@ defmodule Elisper.Driver do
 
    iex> Elisper.Driver.repl(&Elisper.evaluate(&1))
   """
-  def repl(run) do
-    prog = IO.gets "elisper>"
-    run.(prog)
-    repl(run)
+  def repl() do
+    program = IO.gets "elisper>"
+    IO.puts Elisper.evaluate(Elisper.Parser.parse(program))
+    repl()
   end
 end

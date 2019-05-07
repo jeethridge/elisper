@@ -4,6 +4,11 @@ defmodule Elisper.MCI do
   """
   import Elisper.{EvalConds, ApplyConds, Environment}
 
+  def evaluate(expression) do
+    env = Elisper.Environment.global()
+    eval(expression, env)
+  end
+
   @doc """
   eval: Let's start with a naive implementation based on SICP
   and go from there.
@@ -28,9 +33,6 @@ defmodule Elisper.MCI do
   apply: ditto
   """
   def elisper_apply(procedure, arguments) do
-    IO.puts "Caling apply"
-    IO.inspect procedure
-    IO.inspect arguments
     cond do
       primitive_procedure?(procedure) -> apply_primitive_procedure(procedure, arguments)
       compound_procedure?(procedure) ->
@@ -64,7 +66,6 @@ defmodule Elisper.MCI do
   """
   @spec apply_primitive_procedure(any(), any()) :: nil
   def apply_primitive_procedure(procedure, arguments) do
-    IO.puts "apply primative"
     env = Elisper.Environment.global()
     procedure.(arguments, &Elisper.MCI.eval/2, env)
   end
