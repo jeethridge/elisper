@@ -5,7 +5,7 @@ defmodule ListEnvTest do
   alias Elisper.Environment.UnboundVariableError
 
   test "empty environment is a nil binding followed by the empty frame" do
-    assert ListEnv.empty() == [[[nil],[nil]],[]]
+    assert ListEnv.empty() == [[[nil], [nil]], []]
   end
 
   test "extend environment appends new frame to current environment" do

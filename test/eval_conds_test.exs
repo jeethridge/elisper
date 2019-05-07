@@ -15,7 +15,7 @@ defmodule Elisper.EvalCondsTest do
 
   test "quoted expressions start with quoted keyword" do
     assert quoted?([:quoted, "+ 1 1"])
-    assert not quoted?([ "+ 1 1" ])
+    assert not quoted?(["+ 1 1"])
   end
 
   test "assignments have the form (set! <var> <val>)" do
@@ -53,7 +53,6 @@ defmodule Elisper.EvalCondsTest do
   end
 
   test "applications are a pair of operators and operands" do
-    assert application?([[:define, :x, 1],[:*, :x, 2]])
+    assert application?([[:define, :x, 1], [:*, :x, 2]])
   end
-
 end

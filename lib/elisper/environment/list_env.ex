@@ -11,7 +11,7 @@ defmodule Elisper.Environment.ListEnv do
   @doc """
   Get an empty environment.
   """
-  def empty(), do: [Frame.bind(nil, nil, []),[]]
+  def empty(), do: [Frame.bind(nil, nil, []), []]
 
   @doc """
   Looks up the specified variable in the supplied environment.
@@ -20,6 +20,7 @@ defmodule Elisper.Environment.ListEnv do
 
   def lookup_variable_value(variable, [frame, enclosing]) do
     result = Frame.find(variable, frame)
+
     case result do
       nil -> lookup_variable_value(variable, enclosing)
       _ -> result

@@ -2,7 +2,7 @@ defmodule Elisper.Grammar do
   @moduledoc """
   Defines the valid grammar for Elisper.
   """
-  @primatives [:+, :-, :*, :/, :%, := , :&, :|, :<, :>, :!]
+  @primatives [:+, :-, :*, :/, :%, :=, :&, :|, :<, :>, :!]
   @special_forms [:quoted, :begin, :define, :if, :car, :cdr]
 
   @doc """
@@ -13,8 +13,7 @@ defmodule Elisper.Grammar do
   @doc """
   Determine if a procedure is a primative
   """
-  def primative?([operator , _ ]) do
+  def primative?([operator, _]) do
     operator in @primatives
   end
-
 end

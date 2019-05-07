@@ -31,7 +31,7 @@ defmodule TokenizeTest do
 
   test "tokenize gives list of tokens when valid with strings" do
     program = "(begin (define x \"foo\"))"
-    expected  = ["(", :begin, "(", :define, :x, "foo", ")", ")"]
+    expected = ["(", :begin, "(", :define, :x, "foo", ")", ")"]
 
     actual = Tokenizer.tokenize(program)
     assert actual == expected

@@ -17,9 +17,10 @@ defmodule Elisper.Parser.Tokenizer do
 
   def token("("), do: "("
   def token(")"), do: ")"
+
   def token(raw) do
     cond do
-      is_string(raw) -> String.replace(raw,~s("),"")
+      is_string(raw) -> String.replace(raw, ~s("), "")
       is_numeric(raw) -> Float.parse(raw) |> elem(0)
       true -> Code.string_to_quoted(":" <> raw) |> elem(1)
     end

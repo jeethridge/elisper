@@ -1,7 +1,7 @@
 defmodule Elisper do
   @moduledoc """
-  API for the Elisper interpreter.
+  Top-level API for the Elisper interpreter.
   """
-  alias Elisper.MCI
-  defdelegate evaluate(expression), to: MCI
+  alias Elisper.Driver
+  defdelegate repl(), to: Driver
 end

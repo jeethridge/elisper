@@ -15,17 +15,38 @@ defmodule Elisper.MCI do
   """
   def eval(exp, env) do
     cond do
-      self_evaluating?(exp) -> exp
-      variable?(exp) -> lookup_variable_value(exp, env)
-      quoted?(exp) -> text_of_quoutation(exp)
-      assignment?(exp) -> eval_assignment(exp, env)
-      definition?(exp) -> eval_definition(exp, env)
-      if?(exp) -> eval_if(exp, env)
-      lambda?(exp) -> make_procedure(lambda_parameters(exp), lambda_body(exp))
-      begin?(exp) -> eval_sequence( begin_actions(exp), env)
-      cond?(exp) -> eval(cond_if(exp), env)
-      application?(exp) -> elisper_apply( eval(operator(exp), env), list_of_values( operands(exp), env) )
-      true -> raise "Dishing out the plastic, do the dance till you spastic!"
+      self_evaluating?(exp) ->
+        exp
+
+      variable?(exp) ->
+        lookup_variable_value(exp, env)
+
+      quoted?(exp) ->
+        text_of_quoutation(exp)
+
+      assignment?(exp) ->
+        eval_assignment(exp, env)
+
+      definition?(exp) ->
+        eval_definition(exp, env)
+
+      if?(exp) ->
+        eval_if(exp, env)
+
+      lambda?(exp) ->
+        make_procedure(lambda_parameters(exp), lambda_body(exp))
+
+      begin?(exp) ->
+        eval_sequence(begin_actions(exp), env)
+
+      cond?(exp) ->
+        eval(cond_if(exp), env)
+
+      application?(exp) ->
+        elisper_apply(eval(operator(exp), env), list_of_values(operands(exp), env))
+
+      true ->
+        raise "Dishing out the plastic, do the dance till you spastic!"
     end
   end
 
@@ -34,7 +55,9 @@ defmodule Elisper.MCI do
   """
   def elisper_apply(procedure, arguments) do
     cond do
-      primitive_procedure?(procedure) -> apply_primitive_procedure(procedure, arguments)
+      primitive_procedure?(procedure) ->
+        apply_primitive_procedure(procedure, arguments)
+
       compound_procedure?(procedure) ->
         eval_sequence(
           procedure_body(procedure),
@@ -42,9 +65,11 @@ defmodule Elisper.MCI do
             procedure_parameters(procedure),
             arguments,
             procedure_environment(procedure)
-            )
-      )
-      true -> raise "Dream what you like, but you dare not sleep"
+          )
+        )
+
+      true ->
+        raise "Dream what you like, but you dare not sleep"
     end
   end
 
@@ -59,7 +84,6 @@ defmodule Elisper.MCI do
   def eval_sequence(exp, env), do: nil
   def begin_actions(exp), do: nil
   def cond_if(exp), do: nil
-
 
   @doc """
   Apply a primative procedure to its arguments.
