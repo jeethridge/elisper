@@ -73,7 +73,11 @@ defmodule Elisper.MCI do
     end
   end
 
-  def list_of_values(exp, env), do: exp
+  def list_of_values([], _), do: []
+  def list_of_values([first_operand | rest_operands], env) do
+      [eval(first_operand, env) | list_of_values(rest_operands, env)]
+  end
+
   def text_of_quoutation(exp), do: nil
   def eval_assignment(exp, env), do: nil
   def eval_definition(exp, env), do: nil
