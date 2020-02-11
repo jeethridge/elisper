@@ -1,44 +1,39 @@
 defmodule Elisper.Parser.Tokenizer do
   @moduledoc """
   Tokenizer for the Elisper Parser.
-  """
-  alias Elisper.Grammar
 
-  def tokenize(str) do
-    str
+  Note: Works for simple strings like "foo"
+  but not compound or delimited strings like "the quick brown fox"
+  or "the \"quick\" brown fox". Will need to come back and build a
+  better tokenizer for that.
+  """
+  def tokenize(buffer) do
+    buffer
     |> String.replace("(", " ( ")
     |> String.replace(")", " ) ")
     |> String.split()
-    |> Enum.map(&mark_token/1)
+    |> Enum.map(&token/1)
   end
 
-  def mark_token(str) do
+  def token("("), do: "("
+  def token(")"), do: ")"
+
+  def token(raw) do
     cond do
-      str in Grammar.strings -> token(str)
-      true -> primative(str)
+      is_string(raw) -> String.replace(raw, ~s("), "")
+      is_numeric(raw) -> Float.parse(raw) |> elem(0)
+      true -> Code.string_to_quoted(":" <> raw) |> elem(1)
     end
   end
 
-  def token(str) do
-    {:ok, token} = Code.string_to_quoted(":" <> str)
-    token
-  end
-
-  def primative(str) do
-    cond do
-      is_numeric(str) ->
-        {num, _} = Float.parse(str)
-        num
-
-      true ->
-        str
-    end
-  end
-
-  def is_numeric(str) do
-    case Float.parse(str) do
-      {_num, ""} -> true
+  def is_numeric(raw) do
+    case Float.parse(raw) do
+      {_, ""} -> true
       _ -> false
     end
+  end
+
+  def is_string(raw) do
+    raw =~ ~r/\".*\"/
   end
 end
